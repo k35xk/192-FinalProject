@@ -1,0 +1,71 @@
+---
+title: "Fertility and Its Relationship with Female Education"
+author: "Kristen Huang, Liwen Xu"
+date: "Last updated on `r Sys.Date()`"
+output:
+  html_document:
+    toc: true
+    toc_depth: 2
+    toc_float: true
+    df_print: kable
+---
+
+<!--
+Comments in HTML are like this! 
+-->
+
+## Background
+
+```{r,message=FALSE, warning=FALSE, echo=FALSE}
+library(tidyverse)
+library(sf)
+library(maps)
+library(scales)
+library(spData)
+```
+
+```{r,message=FALSE,warning=FALSE, echo=FALSE}
+base <- "WORLD_COUNTRIES_BOUNDARIES/" %>%
+  sf::read_sf()
+
+#specifically for 2015-2020
+t_fertility <- read_csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vTcJCzLBnpf6HRUcoEwmXe5PiMeKr6zQg7YUfoogvPfhvlNKkAkpHb85Wyi0uRWYM7r7BXIhrugAO6f/pub?gid=533862032&single=true&output=csv") %>%
+  rename(Country=X1,avg_births=X17) %>%
+  select(Country,avg_births) %>%
+  na.omit(t_fertility)
+```
+
+In 2017, about half of all countries worldwide had fallen below the global average fertility rate, which is at least two children per woman to ensure a stable population. There has been an ongoing trend of a falling birth rate. Policies have placed a burden on women for bearing children, for participating as workforces and etc.^[Bloomberg.com, Bloomberg, https://www.bloomberg.com/graphics/2019-global-fertility-crash/.] As we don’t want to discuss the population issue here, we want to understand more about fertility and any indicator that might lead to its decline. In this blog-post, we would focus specifically on its relationship with the level of educational attainment.
+
+## An Introduction to Fertility
+
+This shapefile map below reveals the average total fertility of countries worldwide in 2015. Total Fertility is the average number of live births a hypothetical cohort of women would have during their whole lives. It is live births per woman. We also labeled the name of geographic regions to better observe the map. The grey area is where we don’t have the data.^[“World Population Prospects - Population Division.” United Nations, United Nations, https://population.un.org/wpp/Download/Standard/Fertility/.]
+```{r,echo=FALSE}
+#Base Map
+base <- base %>%
+  left_join(t_fertility,by="Country") %>%
+  select(Country,avg_births,geometry) %>%
+  mutate(avg_births=as.numeric(avg_births)) 
+
+world <- world %>%
+  rename(Country=name_long) %>%
+  select(Country,continent, geom) %>%
+  #pick geological center of five continents
+  filter(Country=="United States"| Country=="China"|
+           Country=="Belarus"| Country=="South Sudan"|
+           Country=="Australia") %>%
+  mutate(
+    lon = purrr::map_dbl(geom, ~sf::st_centroid(.x)[[1]]),
+    lat = purrr::map_dbl(geom, ~sf::st_centroid(.x)[[2]])
+    )
+
+ggplot() +
+  geom_sf(data = base, aes(fill = avg_births)) +
+  scale_fill_continuous(type = "gradient",labels=comma) +
+  geom_text(data = world, 
+            aes(x = lon, y = lat,label=continent),color="white") +
+  labs(title="Fertility Map",
+       fill="Average Births")
+```
+
+It is apparent that the average number of births varies on different continents. Africa has the highest average number because most countries in Africa have average births above 5. Countries in the Middle East and South America also have a relatively large number of average births. Since level of education may be different in different countries, does education have correlation with fertility?
