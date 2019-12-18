@@ -40,7 +40,8 @@ In 2017, about half of all countries worldwide had fallen below the global avera
 ## An Introduction to Fertility
 
 This shapefile map below reveals the average total fertility of countries worldwide in 2015. Total Fertility is the average number of live births a hypothetical cohort of women would have during their whole lives. It is live births per woman. We also labeled the name of geographic regions to better observe the map. The grey area is where we don’t have the data.^[“World Population Prospects - Population Division.” United Nations, United Nations, https://population.un.org/wpp/Download/Standard/Fertility/.]
-```{r,echo=FALSE}
+
+```{r,echo=FALSE, fig.height=3.5}
 #Base Map
 base <- base %>%
   left_join(t_fertility,by="Country") %>%
@@ -65,7 +66,8 @@ ggplot() +
   geom_text(data = world, 
             aes(x = lon, y = lat,label=continent),color="white") +
   labs(title="Fertility Map",
-       fill="Average Births")
+       fill="Average Births",
+       y="",x="")
 ```
 
 It is apparent that the average number of births varies on different continents. Africa has the highest average number because most countries in Africa have average births above 5. Countries in the Middle East and South America also have a relatively large number of average births. Since level of education may be different in different countries, does education have correlation with fertility?
