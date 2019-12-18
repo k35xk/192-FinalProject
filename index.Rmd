@@ -1,6 +1,6 @@
 ---
 title: "Fertility and Its Relationship with Female Education"
-author: "Kristen Huang, Liwen Xu"
+author: "Kristen Huang and Liwen Xu"
 date: "Last updated on `r Sys.Date()`"
 output:
   html_document:
