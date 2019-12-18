@@ -41,9 +41,9 @@ pri <- read_csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vQTGJUF8WK8S3dg
 
 ```
 
-Before investigating if there is a strong correlation between female education and fertility decline, we expected to see an increase in women’s educational levels which correlate to a fertility trend. 
+Before investigating if there is a strong correlation between female education and fertility decline, we expected to see an increase in women’s educational levels which may correlate to a fertility trend. 
 
-The graph below has changes in the percentage of females of total pupils enrolled in secondary education throughout the years. We selected five countries on different continents and four different years ranging from 1986 to 2015. The graph reveals that in most countries, the percentages are becoming equal over the years: most countries have reached above 45 percent. Since the ideal percentage is around 50%, the most recent percentage is substantial. Countries in Asia and Africa have increased significantly. What’s more, since, in the first map, total fertility over the world still has a significant difference, this indicates that secondary education wouldn’t be the only factor that affects the average number of births.^[“Secondary Education, pupils (% Female).” The World Bank, https://data.worldbank.org/indicator/SE.SEC.ENRL.VO.FE.ZS?end=2019&start=2019&view=bar.]
+The graph below has changes in the percentage of females of total pupils enrolled in secondary education throughout the years. We selected five countries on different continents and four different years ranging from 1986 to 2015. The graph reveals that in most countries, the percentages are becoming equal over the years: most countries have reached above 45 percent. Countries in Asia and Africa have improved significantly. What’s more, since, in the first map, total fertility over the world still has a significant difference, this indicates that secondary education wouldn’t be the only factor that affects the average number of births.^[“Secondary Education, pupils (% Female).” The World Bank, https://data.worldbank.org/indicator/SE.SEC.ENRL.VO.FE.ZS?end=2019&start=2019&view=bar.]
 
 ```{r,echo=FALSE}
 EditedSecEdu <-SecEdu %>% 
@@ -61,7 +61,7 @@ ggplot(data =GraphEditedSecEdu,
        aes(x = CountryName, y=SecEdu,fill=year))+
   geom_col(position = 'dodge')+
        labs(x="Country",y= "%female", col = "Year",
-       title = "Sceondary Education,pupils(%female)")+
+       title = "Secondary education, pupils(%female)")+
   scale_fill_brewer(palette="Blues")
 
 ```
@@ -92,13 +92,15 @@ final_t <- final %>%
 ```{r,echo=FALSE}
 ggplot(data=final_t,aes(data,avg_births))+
   geom_point(alpha=0.3)+
-  labs(x="Percent of female with education (%)",y="Average Number of Births for Each Country")+
+  labs(x="Percent of female with education (%)",
+       y="Average number of births for each country",
+       title="Education and fertility")+
   facet_wrap(~name)+
   geom_smooth(se = FALSE, span = 0.4)
 
 ```
 
-In general, corresponding to the last graph, we notice by 2015, most countries including the developed and the developing countries have more than 45% of females with either education. We observed that most dots clustered where the education level is high and the average number of births is low. The average number of births is also around two which is the global average fertility rate. With our LOESS smooth layer, we see that there’s a decline of total fertility as the percent of females with education increases. And outliers with very high fertility must have a relatively low percentage of female education. 
+In general, corresponding to the last graph, we find that by 2015, most countries including the developed and the developing countries have more than 45% of females with either education level. We observed that most dots clustered where the education level is high and the average number of births is low. The average number of births is also around two which is the global average fertility rate. With our LOESS smooth layer, we see that there’s a decline of total fertility as the percent of females with education increases. And outliers with very high fertility must have a relatively low percentage of female education. 
   
-Therefore, educated women still generally have fewer births than uneducated women. The correlation between fertility and educational attainment is strong and varies among women of different education levels (primary and secondary education).^[“Female education and its impact on fertility.” IZA World of Labor, https://wol.iza.org/uploads/articles/228/pdfs/female-education-and-its-impact-on-fertility.pdf.]
+Therefore, educated women generally have fewer births than uneducated women. The correlation between fertility and educational attainment is strong and varies among women of different education levels (primary and secondary education).^[“Female education and its impact on fertility.” IZA World of Labor, https://wol.iza.org/uploads/articles/228/pdfs/female-education-and-its-impact-on-fertility.pdf.]
 
